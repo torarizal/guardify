@@ -34,7 +34,8 @@ Route::get('/komandan/dashboard', function () {
         'totalJadwalHariIni',
         'jadwals'
     ));
-});
+
+    })->middleware('auth')->name('komandan.dashboard');
 
 Route::get('/petugas/dashboard', function () {
     return view('petugas.dashboard');

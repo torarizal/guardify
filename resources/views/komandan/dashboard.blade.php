@@ -23,14 +23,15 @@
                 </button>
             </form>
 
-            <h2 class="text-xl font-bold mt-6 mb-3">Jadwal Petugas</h2>
-            <table class="w-full border text-center">
-                <tr class="bg-gray-200">
-                    <th class="p-2">Tanggal</th>
-                    <th class="p-2">Shift</th>
-                    <th class="p-2">Nama</th>
-                </tr>
-
+            <div>
+                <h2 class="text-xl font-bold mt-6 mb-3">Jadwal Petugas</h2>
+                <table class="w-full border text-left">
+                    <tr class="bg-gray-200">
+                        <th class="p-2">Tanggal</th>
+                        <th class="p-2">Shift</th>
+                        <th class="p-2">Nama</th>
+                    </tr>
+            </div>
                 @foreach($jadwals as $j)
                 <tr>
                     <td class="p-2">{{ $j->tanggal }}</td>

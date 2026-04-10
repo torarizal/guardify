@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
     <div class="p-6">
 
         <h1 class="text-2xl font-bold mb-4">Dashboard Komandan</h1>
@@ -46,4 +44,4 @@
         </div>
 
     </div>
-@endsection
+</x-app-layout>

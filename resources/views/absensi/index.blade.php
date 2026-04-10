@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
 <div class="p-6">
 
 <h2 class="text-xl font-bold mb-4">Absensi Hari Ini</h2>
@@ -48,4 +46,4 @@
 @endforelse
 
 </div>
-@endsection
+</x-app-layout>

@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
 <div class="p-6">
 
     <h1 class="text-2xl font-bold mb-4">History Jadwal</h1>
@@ -23,4 +21,4 @@
     </table>
 
 </div>
-@endsection
+</x-app-layout>

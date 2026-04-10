@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
 <div class="max-w-xl mx-auto p-6">
 
     <h2 class="text-xl font-bold mb-4">Ketersediaan Jadwal</h2>
@@ -71,4 +69,4 @@
     </table>
 
 </div>
-@endsection
+</x-app-layout>

@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
 <div class="p-6">
 
 <form method="POST" action="{{ route('petugas.store') }}">
@@ -13,4 +11,4 @@
 </form>
 
 </div>
-@endsection
+</x-app-layout>

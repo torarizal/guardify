@@ -1,26 +1,36 @@
-FROM php:8.3-cli
+# Menggunakan image resmi PHP 8.4 dengan Apache
+FROM php:8.4-apache
 
-WORKDIR /var/www
-
-# Install dependencies
+# Install dependensi sistem dan ekstensi PHP untuk MySQL
 RUN apt-get update && apt-get install -y \
-    git unzip curl libzip-dev zip \
-    && docker-php-ext-install pdo pdo_mysql
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    && docker-php-ext-install pdo_mysql zip
 
-# Install composer
+# Aktifkan mod_rewrite Apache untuk routing Laravel
+RUN a2enmod rewrite
+
+# Ubah root direktori Apache ke folder /public Laravel
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Copy Composer dari image resminya
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy project
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy seluruh file proyek ke dalam container
 COPY . .
 
-# Install Laravel dependencies
+# Install dependensi Laravel (tanpa package development)
 RUN composer install --no-dev --optimize-autoloader
 
-# Generate key (optional, bisa lewat ENV juga)
-RUN php artisan key:generate
+# Berikan hak akses (permission) ke folder storage dan cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port
-EXPOSE 10000
-
-# Run Laravel
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Buka port 80
+EXPOSE 80

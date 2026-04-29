@@ -1,6 +1,10 @@
 # Menggunakan image resmi PHP 8.4 dengan Apache
 FROM php:8.4-apache
 
+# FIX ERROR APACHE: Matikan mpm_event/worker yang bentrok dan pastikan prefork aktif
+RUN a2dismod mpm_event mpm_worker || true
+RUN a2enmod mpm_prefork
+
 # Install dependensi sistem dan ekstensi PHP untuk MySQL
 RUN apt-get update && apt-get install -y \
     libzip-dev \

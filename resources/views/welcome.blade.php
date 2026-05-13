@@ -41,14 +41,14 @@
                                 Log in
                             </a>
 
-                            @if (Route::has('register'))
+                            {{-- @if (Route::has('register'))
                                 <a
                                     href="{{ route('register') }}"
                                     class="inline-block px-5 py-1.5 bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 rounded-lg text-sm font-bold transition-all shadow-sm shadow-blue-200"
                                 >
                                     Register
                                 </a>
-                            @endif
+                            @endif --}}
                         @endauth
                     </nav>
                 @endif

@@ -73,15 +73,21 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
-    public function destroy(user $user)
+    public function destroy($id)
     {
+    $user = \App\Models\User::findOrFail($id);
 
-        if ($user->petugas) {
-            $user->petugas->delete();
-        }
+    if ($user->petugas) {
+        // 1. Hapus riwayat anaknya dulu
+        $user->petugas->absensi()->delete();
+        $user->petugas->jadwals()->delete();
 
-        $user->delete();
+        // 2. Hapus data petugasnya
+        $user->petugas->delete();
+    }
 
-        return redirect()->route('users.index');
+    $user->delete();
+
+    return redirect()->route('users.index')->with('success', 'Akun User beserta data petugas dan riwayatnya berhasil dihapus.');
     }
 }

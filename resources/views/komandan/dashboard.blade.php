@@ -1,7 +1,4 @@
 <x-app-layout>
-    <!-- Wrapper Utama Dashboard (Mengatur background gelap & warna teks default) -->
-    <!-- Catatan: Jika layout utama (app.blade.php) Anda memiliki background putih bawaan,
-         pastikan Anda juga menyesuaikan background di file layout tersebut menjadi gelap. -->
     <div class="bg-[#0B1121] min-h-screen text-gray-200 p-6 md:p-8 font-sans">
 
         <!-- Top Header & Action Button -->
@@ -11,8 +8,6 @@
                 <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2 tracking-tight">Command Dashboard</h1>
                 <p class="text-gray-400 text-sm flex items-center gap-2">
                     System status: <span class="text-blue-400 font-semibold">OPTIMIZED</span>
-                    <span class="text-gray-600">•</span>
-                    Today is {{ \Carbon\Carbon::now()->format('M d, Y') }}
                 </p>
             </div>
 
@@ -41,58 +36,50 @@
                 </div>
 
                 <div class="text-5xl font-extrabold text-white mb-2">{{ $totalPetugas }}</div>
-                <div class="text-blue-400 text-sm flex items-center gap-1.5 mb-8 font-medium">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                    +4 active this week
-                </div>
-
-                <div class="mt-auto">
-                    <div class="w-full bg-[#0B1121] rounded-full h-1.5 border border-white/5">
-                        <div class="bg-blue-500 h-1.5 rounded-full shadow-[0_0_10px_rgba(37,99,235,0.8)]" style="width: 82%"></div>
-                    </div>
-                </div>
             </div>
 
             <!-- Card: Jadwal Hari Ini -->
             <div class="lg:col-span-2 bg-[#131C31] rounded-2xl p-6 border border-white/5 flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-6">
                     <div>
-                        <h2 class="text-white font-bold text-lg">Jadwal Hari Ini</h2>
-                        <p class="text-gray-400 text-sm mt-1">Shift distribution across sectors</p>
+                        <h2 class="text-white font-bold text-lg"> Hari Ini</h2>
+                        {{ \Carbon\Carbon::now()->format('M d, Y') }}
                     </div>
                     <span class="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-[10px] font-bold tracking-widest uppercase">
-                        Live Monitoring
+                        Live Time
                     </span>
                 </div>
+                <div></div>
+                <div
+                    x-data="clock()"
+                    x-init="start()"
+                    class="text-2xl font-extrabold text-blue-400 bg-[#0B1121] px-6 py-3 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.3)] inline-block"
+                >
+                    <div class="flex items-center ">
+                    <h2 id="clock"></h2>
+                    <script>
+                        function updateClock() {
+                            const now = new Date();
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Shift Pagi -->
-                    <div class="bg-[#0B1121] rounded-xl p-5 border border-white/5">
-                        <div class="text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-3">Pagi (06:00 - 14:00)</div>
-                        <div class="flex items-baseline gap-2 text-white">
-                            <span class="text-3xl font-extrabold">42</span>
-                            <span class="text-sm font-medium text-gray-500">Petugas</span>
-                        </div>
-                    </div>
-                    <!-- Shift Siang -->
-                    <div class="bg-[#0B1121] rounded-xl p-5 border border-white/5">
-                        <div class="text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-3">Siang (14:00 - 22:00)</div>
-                        <div class="flex items-baseline gap-2 text-white">
-                            <span class="text-3xl font-extrabold">38</span>
-                            <span class="text-sm font-medium text-gray-500">Petugas</span>
-                        </div>
-                    </div>
-                    <!-- Shift Malam -->
-                    <div class="bg-[#0B1121] rounded-xl p-5 border border-white/5">
-                        <div class="text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-3">Malam (22:00 - 06:00)</div>
-                        <div class="flex items-baseline gap-2 text-white">
-                            <span class="text-3xl font-extrabold">44</span>
-                            <span class="text-sm font-medium text-gray-500">Petugas</span>
-                        </div>
-                    </div>
+                            let hours = now.getHours().toString().padStart(2, '0');
+                            let minutes = now.getMinutes().toString().padStart(2, '0');
+                            let seconds = now.getSeconds().toString().padStart(2, '0');
+
+                            document.getElementById("clock").innerHTML =
+                                hours + ":"  + minutes + ":" + seconds;
+                        }
+
+                        // update tiap 1 detik
+                        setInterval(updateClock, 1000);
+
+                        // jalankan pertama kali
+                        updateClock();
+                    </script>
+
                 </div>
+
+                    </div>
+
             </div>
 
         </div>
@@ -134,10 +121,19 @@
                                 <!-- Personnel (Nama) -->
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        <!-- Inisial Avatar -->
-                                        <div class="w-9 h-9 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-sm">
-                                            {{ substr($j->petugas->user->name, 0, 1) }}
-                                        </div>
+
+                                        <!-- Avatar / Foto Profil -->
+                                        @if(isset($j->petugas->user->photo) && $j->petugas->user->photo)
+                                            <img src="{{ asset('storage/' . $j->petugas->user->photo) }}"
+                                                alt="Foto {{ $j->petugas->user->name }}"
+                                                class="w-9 h-9 rounded-full object-cover border border-blue-500/30 shadow-[0_0_10px_rgba(37,99,235,0.15)]">
+                                        @else
+                                            <!-- Fallback Inisial jika belum ada foto -->
+                                            <div class="w-9 h-9 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-sm shadow-[0_0_10px_rgba(37,99,235,0.1)]">
+                                                {{ strtoupper(substr($j->petugas->user->name ?? 'P', 0, 1)) }}
+                                            </div>
+                                        @endif
+
                                         <div>
                                             <div class="text-white font-bold">{{ $j->petugas->user->name }}</div>
                                             <div class="text-gray-500 text-[11px] mt-0.5">ID: #SEC-{{ str_pad($j->petugas->id, 4, '0', STR_PAD_LEFT) }}</div>
@@ -163,9 +159,9 @@
                                 <!-- Jam Duty & Tanggal -->
                                 <td class="px-6 py-4">
                                     <div class="text-white font-semibold flex items-center gap-2 mb-1.5">
-                                        @if(strtolower($j->shift) == 'pagi') 06:00 - 14:00
-                                        @elseif(strtolower($j->shift) == 'siang') 14:00 - 22:00
-                                        @else 22:00 - 06:00 @endif
+                                        @if(strtolower($j->shift) == 'pagi') 08:00 - 20:00
+                                        @elseif(strtolower($j->shift) == 'siang') 20:00 - 08:00
+                                        @else 20:00 - 08:00 @endif
 
                                         <!-- Indikator Live jika hari ini -->
                                         @if($j->tanggal == \Carbon\Carbon::now()->format('Y-m-d'))

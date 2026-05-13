@@ -6,16 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Petugas;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'photo',
     ];
 
     protected $hidden = [
@@ -31,5 +33,12 @@ class User extends Authenticatable
     public function petugas()
     {
         return $this->hasOne(Petugas::class);
+    }
+
+    public function getPhotoUrlAttribute()
+    {
+    return $this->photo
+        ? asset('storage/' . $this->photo)
+        : 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
     }
 }

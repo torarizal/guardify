@@ -1,10 +1,13 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
+// Models
 use App\Models\Jadwal;
 use App\Models\Petugas;
+
+// Controllers
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PetugasController;
 use App\Http\Controllers\UserController;
@@ -16,7 +19,16 @@ use App\Http\Controllers\RekapController;
 use App\Http\Controllers\AbsensiController;
 
 Route::get('/', function () {
-    return view('welcome');
+    $hariIni = Carbon::today();
+
+    $jadwalHariIni = Jadwal::with('petugas')
+        ->whereDate('tanggal', $hariIni)
+        ->get();
+
+    $shiftpagi = $jadwalHariIni->where('shift', 'pagi');
+    $shiftMalam = $jadwalHariIni->where('shift', 'malam');
+
+    return view('welcome', compact('shiftpagi', 'shiftMalam'));
 });
 
 Route::middleware('auth')->group(function () {

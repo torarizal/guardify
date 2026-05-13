@@ -70,9 +70,22 @@ class PetugasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(petugas $petugas)
+    public function destroy($id)
     {
-        $petugas->delete();
-    return redirect('/petugas');
+    $petugas = \App\Models\Petugas::findOrFail($id);
+
+    // Simpan ID user sebelum petugasnya dihapus
+    $userId = $petugas->user_id;
+
+    $petugas->absensi()->delete();
+    $petugas->jadwals()->delete();
+
+    $petugas->delete();
+
+    if ($userId) {
+        \App\Models\User::find($userId)->delete();
+    }
+
+    return redirect()->route('petugas.index')->with('success', 'Data Petugas beserta akun dan riwayatnya berhasil dihapus.');
     }
 }

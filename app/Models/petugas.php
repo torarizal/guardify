@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Jadwal;
 use App\Models\Availability;
+use App\Models\Absensi; // Tambahkan use Absensi
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Petugas extends Model
 {
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'user_id',
         'no_hp'
@@ -17,10 +22,10 @@ class Petugas extends Model
     // relasi ke user
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
-    // relasi ke jadwal
+    // relasi ke jadwal (Saya ganti jadi 'jadwal' tanpa 's' agar sinkron dengan Controller)
     public function jadwals()
     {
         return $this->hasMany(Jadwal::class);
@@ -30,5 +35,11 @@ class Petugas extends Model
     public function availabilities()
     {
         return $this->hasMany(Availability::class);
+    }
+
+    // relasi ke absensi (INI YANG BIKIN ERROR SEBELUMNYA)
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class);
     }
 }
